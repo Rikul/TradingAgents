@@ -17,6 +17,14 @@ trap cleanup EXIT
 
 cd "$ROOT_DIR"
 
+if [[ ! -x "$ROOT_DIR/web-ui/node_modules/.bin/next" ]]; then
+  npm --prefix web-ui install >/tmp/tradingagents-web-npm-install.log 2>&1
+fi
+
+if [[ ! -d "$ROOT_DIR/web-ui/.next" ]]; then
+  npm --prefix web-ui run build >/tmp/tradingagents-web-build.log 2>&1
+fi
+
 python -m uvicorn webapi.main:app --host 127.0.0.1 --port 8000 >/tmp/tradingagents-webapi.log 2>&1 &
 API_PID=$!
 
