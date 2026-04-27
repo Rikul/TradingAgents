@@ -162,7 +162,14 @@ class RunManager:
                 },
             )
 
-            for chunk in graph.graph.stream(init_state, **args):
+            stream_iter = graph.graph.stream(init_state, **args)
+            end_of_stream = object()
+
+            while True:
+                chunk = await asyncio.to_thread(next, stream_iter, end_of_stream)
+                if chunk is end_of_stream:
+                    break
+
                 for key in REPORT_KEYS:
                     if chunk.get(key):
                         record.report_sections[key] = chunk[key]
