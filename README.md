@@ -140,6 +140,8 @@ Then open:
 - Web UI: http://localhost:3000
 - API: http://localhost:8000
 
+Note: the web container is configured to proxy `/api/*` to `http://tradingagents-api:8000` at build/runtime, so browser requests stay same-origin while container networking uses the internal service hostname.
+
 ### Required APIs
 
 TradingAgents supports multiple LLM providers. Set the API key for your chosen provider:

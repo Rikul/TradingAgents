@@ -25,7 +25,10 @@ services:
     build:
       context: ./web-ui
       dockerfile: Dockerfile
+      args:
+        - API_BASE_URL=http://tradingagents-api:8000
     environment:
+      - API_BASE_URL=http://tradingagents-api:8000
       - NEXT_PUBLIC_API_BASE_URL=http://tradingagents-api:8000
     ports:
       - "3000:3000"
