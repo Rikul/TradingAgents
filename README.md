@@ -132,6 +132,14 @@ For local models with Ollama:
 docker compose --profile ollama run --rm tradingagents-ollama
 ```
 
+For the web dashboard + API (monorepo services):
+```bash
+docker compose --profile web up tradingagents-api tradingagents-web
+```
+Then open:
+- Web UI: http://localhost:3000
+- API: http://localhost:8000
+
 ### Required APIs
 
 TradingAgents supports multiple LLM providers. Set the API key for your chosen provider:
@@ -179,6 +187,45 @@ An interface will appear showing results as they load, letting you track the age
 <p align="center">
   <img src="assets/cli/cli_transaction.png" width="100%" style="display: inline-block; margin: 0 2%;">
 </p>
+
+## Web UI (MVP)
+
+TradingAgents now includes a monorepo web stack:
+- **FastAPI backend** (`webapi/`) for run orchestration and SSE event streaming.
+- **Next.js + TypeScript + Tailwind frontend** (`web-ui/`) for run creation, live monitoring, history, report viewing, and settings.
+
+### API Endpoints (MVP)
+
+- `POST /api/runs` - start a run
+- `GET /api/runs` - list run history
+- `GET /api/runs/{run_id}` - run detail
+- `GET /api/runs/{run_id}/events` - SSE live events
+- `GET /api/runs/{run_id}/report` - run report
+- `POST /api/runs/{run_id}/cancel` - cancel active run
+- `GET /api/settings` - runtime/provider settings (env var policy)
+- `POST /api/checkpoints/clear` - clear checkpoints
+
+### Local Development
+
+Backend:
+```bash
+uvicorn webapi.main:app --reload
+```
+
+Frontend:
+```bash
+cd web-ui
+npm install
+npm run dev
+```
+
+GUI smoke verification (requires `web-ui` dependencies + built app):
+```bash
+npm --prefix web-ui run build
+bash scripts/verify_web_gui.sh
+```
+This script starts the FastAPI backend and Next.js app, then validates core MVP routes:
+`/`, `/new-run`, `/history`, `/settings`, `/runs/{id}`, `/runs/{id}/report`.
 
 ## TradingAgents Package
 

@@ -8,6 +8,32 @@ services:
     tty: true
     stdin_open: true
 
+  tradingagents-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.webapi
+    env_file:
+      - .env
+    volumes:
+      - tradingagents_data:/root/.tradingagents
+    ports:
+      - "8000:8000"
+    profiles:
+      - web
+
+  tradingagents-web:
+    build:
+      context: ./web-ui
+      dockerfile: Dockerfile
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://tradingagents-api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - tradingagents-api
+    profiles:
+      - web
+
   ollama:
     image: ollama/ollama:latest
     volumes:
