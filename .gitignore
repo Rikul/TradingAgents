@@ -217,3 +217,9 @@ __marimo__/
 
 # Cache
 **/data_cache/
+
+# Web UI artifacts
+web-ui/node_modules/
+web-ui/.next/
+!web-ui/lib/
+!web-ui/lib/api.ts
